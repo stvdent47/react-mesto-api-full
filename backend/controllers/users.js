@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/user.js');
 const { checkErrors } = require('../utils/utils.js');
 
@@ -48,8 +49,27 @@ const updateUserAvatar = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  User.create(req.body)
-    .then((user) => res.status(200).send(user))
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    res.status(400).send({ message: 'Переданные данные некорректны' });
+  }
+
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        return res.status(409).send({ message: 'Пользователь с таким электронным адресом уже существует' });
+      }
+      return bcrypt.hash(password, 10)
+        .then((hash) => {
+          User.create({
+            email,
+            password: hash,
+          })
+            .then(res.status(201).send({ message: 'Пользователь успешно создан' }))
+            .catch((err) => checkErrors(res, err));
+        });
+    })
     .catch((err) => checkErrors(res, err));
 };
 
