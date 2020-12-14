@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
-const { createUser } = require('./controllers/users.js');
+const { createUser, login } = require('./controllers/users.js');
 const cardRouter = require('./routes/cards');
 const { ERROR_CODE_404, errorMessage404 } = require('./utils/utils.js');
 
@@ -25,6 +25,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use('/users', userRouter);
 app.post('/signup', createUser);
+app.post('/signin', login);
 app.use('/cards', cardRouter);
 app.use('*', (req, res) => res.status(ERROR_CODE_404).send({ message: errorMessage404 }));
 

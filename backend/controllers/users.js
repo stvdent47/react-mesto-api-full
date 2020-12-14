@@ -73,10 +73,36 @@ const createUser = (req, res) => {
     .catch((err) => checkErrors(res, err));
 };
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    res.status(401).send({ message: 'Переданные данные некорректны' });
+  }
+
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            return Promise.reject(new Error('Неправильные почта или пароль'));
+          }
+          const token = '1';
+          return res.status(200).send({ token });
+        });
+    })
+    .catch((err) => res.status(401).send({ message: err.message }));
+};
+
 module.exports = {
   getUsers,
   getUser,
   updateUser,
   updateUserAvatar,
   createUser,
+  login,
 };
