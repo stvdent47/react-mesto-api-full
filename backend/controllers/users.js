@@ -17,6 +17,14 @@ const getUser = (req, res) => {
     .catch((err) => checkErrors(res, err));
 };
 
+const getCurrentUserInfo = (req, res) => {
+  const { userId } = req.body;
+  User.findById(userId)
+    .orFail(new Error('notValidId'))
+    .then((user) => res.status(200).send(user))
+    .catch((err) => checkErrors(res, err));
+};
+
 const updateUser = (req, res) => {
   const userId = req.user._id;
   User.findByIdAndUpdate(userId, {
@@ -108,6 +116,7 @@ const login = (req, res) => {
 module.exports = {
   getUsers,
   getUser,
+  getCurrentUserInfo,
   updateUser,
   updateUserAvatar,
   createUser,
