@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user.js');
 const { checkErrors } = require('../utils/utils.js');
+const { getJwtToken } = require('../utils/jwt.js');
 
 const getUsers = (req, res) => {
   User.find()
@@ -80,21 +81,27 @@ const login = (req, res) => {
     res.status(401).send({ message: 'Переданные данные некорректны' });
   }
 
-  User.findOne({ email })
+  User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
+      const token = getJwtToken(user._id);
 
-      return bcrypt.compare(password, user.password)
-        .then((matched) => {
-          if (!matched) {
-            return Promise.reject(new Error('Неправильные почта или пароль'));
-          }
-          const token = '1';
-          return res.status(200).send({ token });
-        });
+      return res.status(200).send({ token });
     })
+  // User.findOne({ email })
+  //   .then((user) => {
+  //     if (!user) {
+  //       return Promise.reject(new Error('Неправильные почта или пароль'));
+  //     }
+
+  //     return bcrypt.compare(password, user.password)
+  //       .then((matched) => {
+  //         if (!matched) {
+  //           return Promise.reject(new Error('Неправильные почта или пароль'));
+  //         }
+  //         const token = getJwtToken(user._id);
+  //         return res.status(200).send({ token });
+  //       });
+  //   })
     .catch((err) => res.status(401).send({ message: err.message }));
 };
 
