@@ -18,12 +18,12 @@ const App = () => {
    */
   const [currentUser, setCurrentUser] = useState({
     name: '',
+    email: '',
     about: '',
     avatar: '',
   });
 
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userData, setUserData] = useState({ email: '' });
   /**
    * profile editing
    */
@@ -145,9 +145,10 @@ const App = () => {
       .then((res) => {
         if (res.token) {
           localStorage.setItem('jwt', res.token);
-          setUserData({
+          setCurrentUser({
+            ...currentUser,
             email,
-          });
+          })
           setLoggedIn(true);
           history.push('/feed');
         }
@@ -194,7 +195,8 @@ const App = () => {
         .getContent(jwt)
         .then((res) => {
           if (res) {
-            setUserData({
+            setCurrentUser({
+              ...currentUser,
               email: res.email,
             });
             setLoggedIn(true);
@@ -207,7 +209,7 @@ const App = () => {
 
   const handleSignOut = () => {
     localStorage.removeItem('jwt');
-    setUserData({
+    setCurrentUser({
       email: '',
     });
     setLoggedIn(false);
@@ -246,7 +248,6 @@ const App = () => {
           path='/feed'
           component={Main}
           loggedIn={loggedIn}
-          userData={userData}
           onEditProfile={openEditProfileModal}
           onAddPlace={openAddPlaceModal}
           onEditAvatar={openEditAvatarModal}
