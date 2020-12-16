@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
 const { checkErrors } = require('../utils/utils.js');
 const { getJwtToken } = require('../utils/jwt.js');
@@ -9,7 +10,22 @@ const getUsers = (req, res) => {
     .catch((err) => checkErrors(res, err));
 };
 
+// eslint-disable-next-line consistent-return
 const getUser = (req, res) => {
+  const { authorization } = req.body;
+
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    return res.status(401).send({ messagge: 'Необходима авторизация' });
+  }
+
+  const token = authorization.replace('Bearer ', '');
+
+  try {
+    jwt.verify(token, process.env.SECRET_KEY);
+  } catch (err) {
+    return res.status(401).send({ messagge: 'Необходима авторизация' });
+  }
+
   const { userId } = req.params;
   User.findById(userId)
     .orFail(new Error('notValidId'))
