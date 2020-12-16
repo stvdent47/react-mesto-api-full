@@ -18,7 +18,7 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "ghdeploy": "gh-pages -d build",
-    "deploy": "npm run build && scp -r ./build/* stvdent47@84.201.133.252:/home/stvdent47/yndx/client"
+    "deploy": "npm run build && scp -r ./build/* stvdent47@84.201.133.252:/home/stvdent47/yndx/react-mesto-api-full/frontend"
   },
   "eslintConfig": {
     "extends": "react-app"

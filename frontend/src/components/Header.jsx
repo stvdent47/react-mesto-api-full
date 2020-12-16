@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import logo from '../images/logo.svg';
 
 const Header = (props) => {
+  const currentUser = useContext(CurrentUserContext);
   let headerLink;
 
   if (props.page === 'signin') {
@@ -12,7 +14,7 @@ const Header = (props) => {
   } else if (props.page === 'feed') {
     headerLink = 
     <nav className='header__nav'>
-      <p className="header__info">{props.userData.email}</p>
+      <p className="header__info">{currentUser.email}</p>
       <Link to='/login' className='header__link header__link_signout' onClick={props.handleSignOut}>Выйти</Link>
     </nav>
   }

@@ -1,29 +1,27 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const auth = require('./middlewares/auth.js');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
+const { createUser, login } = require('./controllers/users.js');
 const { ERROR_CODE_404, errorMessage404 } = require('./utils/utils.js');
 
 const app = express();
-const { port = 3000 } = process.env;
+const { PORT = 3000 } = process.env;
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useFindAndModify: false,
   useCreateIndex: true,
 });
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '5fb1bc08203e9926cd683d15',
-  };
-
-  next();
-});
 app.use(bodyParser.json());
-app.use('/users', userRouter);
-app.use('/cards', cardRouter);
+app.post('/signup', createUser);
+app.post('/signin', login);
+app.use('/users', auth, userRouter);
+app.use('/cards', auth, cardRouter);
 app.use('*', (req, res) => res.status(ERROR_CODE_404).send({ message: errorMessage404 }));
-
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+// eslint-disable-next-line no-console
+app.listen(PORT, () => console.log(`Example app listening on PORT ${PORT}!`));

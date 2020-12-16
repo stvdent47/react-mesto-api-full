@@ -9,7 +9,7 @@ const Main = (props) => {
 
   return (
     <>
-      <Header page='feed' handleSignOut={props.handleSignOut} userData={props.userData} />
+      <Header page='feed' handleSignOut={props.handleSignOut} />
       <main className='main'>
         <section className='profile'>
           <div className='profile__photo-container' onClick={props.onEditAvatar}>
