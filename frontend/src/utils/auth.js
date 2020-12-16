@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://api.stvdent47.students.nomoredomains.icu/';
+export const BASE_URL = 'http://localhost:3000';
 
 const resCheck = (res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
 
