@@ -101,7 +101,7 @@ class Api {
 }
 
 const api = new Api({
-  url: 'https://mesto.nomoreparties.co/v1/cohort-15',
+  url: env.BASE_URL,
   headers: {
     authorization: '1ed91742-56fd-4a56-812b-580db32d6be2',
     'Content-Type': 'application/json',
