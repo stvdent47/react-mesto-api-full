@@ -1,9 +1,9 @@
-export const BASE_URL = 'http://localhost:3000';
+import env from 'react-dotenv';
 
 const resCheck = (res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
 
 export const signup = (email, password) => {
-  return fetch(`${BASE_URL}/signup`, {
+  return fetch(`${env.BASE_URL}/signup`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -15,7 +15,7 @@ export const signup = (email, password) => {
 };
 
 export const signin = (email, password) => {
-  return fetch(`${BASE_URL}/signin`, {
+  return fetch(`${env.BASE_URL}/signin`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -30,7 +30,7 @@ export const signin = (email, password) => {
 }
 
 export const getContent = (token) => {
-  return fetch(`${BASE_URL}/users/me`, {
+  return fetch(`${env.BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
