@@ -27,15 +27,30 @@ const getUser = (req, res) => {
   }
 
   const { userId } = req.params;
-  User.findById(userId)
+  return User.findById(userId)
     .orFail(new Error('notValidId'))
     .then((user) => res.status(200).send(user))
     .catch((err) => checkErrors(res, err));
 };
 
 const getCurrentUserInfo = (req, res) => {
-  const { userId } = req.body;
-  User.findById(userId)
+  const { authorization } = req.headers;
+
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    return res.status(401).send({ messagge: 'Необходима авторизация' });
+  }
+
+  const token = authorization.replace('Bearer ', '');
+
+  let payload;
+  try {
+    payload = jwt.verify(token, process.env.SECRET_KEY);
+  } catch (err) {
+    return res.status(401).send({ messagge: 'Необходима авторизация' });
+  }
+
+  const { id } = payload;
+  return User.findById(id)
     .orFail(new Error('notValidId'))
     .then((user) => res.status(200).send(user))
     .catch((err) => checkErrors(res, err));
@@ -43,7 +58,7 @@ const getCurrentUserInfo = (req, res) => {
 
 const updateUser = (req, res) => {
   const userId = req.user._id;
-  User.findByIdAndUpdate(userId, {
+  return User.findByIdAndUpdate(userId, {
     name: req.body.name,
     about: req.body.about,
   },
@@ -59,7 +74,7 @@ const updateUser = (req, res) => {
 
 const updateUserAvatar = (req, res) => {
   const userId = req.user._id;
-  User.findByIdAndUpdate(userId,
+  return User.findByIdAndUpdate(userId,
     {
       avatar: req.body.avatar,
     },
@@ -80,7 +95,7 @@ const createUser = (req, res) => {
     res.status(400).send({ message: 'Переданные данные некорректны' });
   }
 
-  User.findOne({ email })
+  return User.findOne({ email })
     .then((user) => {
       if (user) {
         return res.status(409).send({ message: 'Пользователь с таким электронным адресом уже существует' });
@@ -109,7 +124,7 @@ const login = (req, res) => {
     .then((user) => {
       const token = getJwtToken(user._id);
 
-      return res.status(200).send({ token });
+      return res.status(200).send({ user, token });
     })
   // User.findOne({ email })
   //   .then((user) => {

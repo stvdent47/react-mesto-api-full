@@ -21,6 +21,7 @@ const App = () => {
     email: '',
     about: '',
     avatar: '',
+    id: '',
   });
 
   const [loggedIn, setLoggedIn] = useState(false);
@@ -143,11 +144,16 @@ const App = () => {
     auth
       .signin(email, password)
       .then((res) => {
+        console.log(res)
+        const { name, email, about, avatar, _id } = res.user;
         if (res.token) {
           localStorage.setItem('jwt', res.token);
           setCurrentUser({
-            ...currentUser,
+            name,
             email,
+            about,
+            avatar,
+            id: _id,
           })
           setLoggedIn(true);
           history.push('/feed');
@@ -193,11 +199,15 @@ const App = () => {
     if (jwt) {
       auth
         .getContent(jwt)
-        .then((res) => {
-          if (res) {
+        .then((user) => {
+          if (user) {
+            const { name, email, about, avatar, _id } = user;
             setCurrentUser({
-              ...currentUser,
-              email: res.email,
+              name,
+              email,
+              about,
+              avatar,
+              id: _id,
             });
             setLoggedIn(true);
             history.push('/feed');
@@ -216,13 +226,13 @@ const App = () => {
   };
 
   useEffect(() => {
-    Promise.all([api.getProfileInfo(), api.getCards()])
-      .then((res) => {
-        const [userInfo, initialCards] = res;
-        setCurrentUser(userInfo);
-        setCards(initialCards);
-      })
-      .catch((err) => console.error(err));
+    // Promise.all([api.getProfileInfo(), api.getCards()])
+    //   .then((res) => {
+    //     const [userInfo, initialCards] = res;
+    //     setCurrentUser(userInfo);
+    //     setCards(initialCards);
+    //   })
+    //   .catch((err) => console.error(err));
     tokenCheck();
   }, []);
 

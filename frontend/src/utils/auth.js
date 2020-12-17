@@ -9,7 +9,10 @@ export const signup = (email, password) => {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ password, email }),
+    body: JSON.stringify({
+      email,
+      password,
+    }),
   })
     .then(resCheck);
 };
@@ -22,8 +25,8 @@ export const signin = (email, password) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
+      email,
       password,
-      email
     }),
   })
     .then(resCheck);
