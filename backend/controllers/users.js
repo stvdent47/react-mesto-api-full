@@ -39,23 +39,27 @@ const updateUser = (req, res) => {
     // upsert: true,
   })
     .orFail(new Error('ValidationError'))
-    .then((user) => res.status(200).send(user))
+    .then((user) => {
+      const { name, about } = user;
+      return res.status(200).send({ name, about });
+    })
     .catch((err) => checkErrors(res, err));
 };
 
 const updateUserAvatar = (req, res) => {
-  const userId = req.user._id;
+  const userId = req.body.id;
   return User.findByIdAndUpdate(userId,
-    {
-      avatar: req.body.avatar,
-    },
+    { avatar: req.body.avatarUrl },
     {
       new: true,
       runValidators: true,
       // upsert: true,
     })
     .orFail(new Error('ValidationError'))
-    .then((user) => res.status(200).send(user))
+    .then((user) => {
+      const { avatar } = user;
+      return res.status(200).send({ avatar });
+    })
     .catch((err) => checkErrors(res, err));
 };
 

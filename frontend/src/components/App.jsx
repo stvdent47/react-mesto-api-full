@@ -40,12 +40,41 @@ const App = () => {
     api
       .editProfile(data)
       .then((res) => {
-        setCurrentUser(res);
+        const { name, about } = res;
+        setCurrentUser({
+          ...currentUser,
+          name,
+          about,
+        });
         closeAllPopups();
       })
       .catch((err) => console.error(err))
       .finally(() => {
         seteditSubmitButtonState('Сохранить');
+      });
+  };
+  /**
+   * avatar updating
+   */
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [avatarUpdateSubmitButtonState, setAvatarUpdateSubmitButtonState] = useState('Сохранить');
+
+  const openEditAvatarModal = () => {
+    setIsEditAvatarPopupOpen(true);
+  };
+
+  const handleUpdateAvatar = ({ avatarUrl, id }) => {
+    setAvatarUpdateSubmitButtonState('Сохранение...');
+    api
+      .updateAvatar({ avatarUrl, id })
+      .then((res) => {
+        const { avatar } = res;
+        setCurrentUser({ ...currentUser, avatar });
+        closeAllPopups();
+      })
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setAvatarUpdateSubmitButtonState('Сохранить');
       });
   };
   /**
@@ -63,7 +92,7 @@ const App = () => {
   const openAddPlaceModal = () => {
     setIsAddPlacePopupOpen(true);
   };
-  
+
   const handleAddPlace = (data) => {
     setAddCardSubmitButtonState('Сохранение...');
     api
@@ -101,29 +130,6 @@ const App = () => {
       })
       .catch((err) => console.error(err));
   };
-  /**
-   * avatar updating
-   */
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  const [avatarUpdateSubmitButtonState, setAvatarUpdateSubmitButtonState] = useState('Сохранить');
-
-  const openEditAvatarModal = () => {
-    setIsEditAvatarPopupOpen(true);
-  };
-
-  const handleUpdateAvatar = (url) => {
-    setAvatarUpdateSubmitButtonState('Сохранение...');
-    api
-      .updateAvatar(url)
-      .then((res) => {
-        setCurrentUser({ ...currentUser, avatar: res.avatar });
-        closeAllPopups();
-      })
-      .catch((err) => console.error(err))
-      .finally(() => {
-        setAvatarUpdateSubmitButtonState('Сохранить');
-      });
-  };
 
   const handleCardClick = (card) => {
     setSelectedCard(card);
@@ -144,7 +150,7 @@ const App = () => {
     auth
       .signin(email, password)
       .then((res) => {
-        console.log(res)
+        console.log(res);
         const { name, email, about, avatar, _id } = res.user;
         if (res.token) {
           localStorage.setItem('jwt', res.token);
@@ -154,7 +160,7 @@ const App = () => {
             about,
             avatar,
             id: _id,
-          })
+          });
           setLoggedIn(true);
           history.push('/feed');
         }
@@ -291,6 +297,7 @@ const App = () => {
       <EditAvatarPopup
         isOpen={isEditAvatarPopupOpen}
         onClose={closeAllPopups}
+        currentUser={currentUser}
         onUpdateAvatar={handleUpdateAvatar}
         submitButtonState={avatarUpdateSubmitButtonState}
       />

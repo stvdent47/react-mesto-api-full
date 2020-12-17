@@ -23,16 +23,7 @@ class Api {
       headers: {
         authorization: `Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json',
-      }
-    }).then(this._checkErrors);
-  }
-  /**
-   * getting cards from the server
-   */
-  getCards() {
-    return fetch(`${this._url}/cards`, {
-      method: 'GET',
-      headers: this._headers,
+      },
     }).then(this._checkErrors);
   }
   /**
@@ -55,13 +46,26 @@ class Api {
   /**
    * updating profile avatar on the server
    */
-  updateAvatar(avatarUrl) {
+  updateAvatar({ avatarUrl, id }) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
-        avatar: avatarUrl,
+        avatarUrl,
+        id,
       }),
+    }).then(this._checkErrors);
+  }
+  /**
+   * getting cards from the server
+   */
+  getCards() {
+    return fetch(`${this._url}/cards`, {
+      method: 'GET',
+      headers: this._headers,
     }).then(this._checkErrors);
   }
   /**
