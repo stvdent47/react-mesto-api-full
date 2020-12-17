@@ -277,6 +277,7 @@ const App = () => {
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
+        currentUser={currentUser}
         onUpdateUser={handleUpdateUser}
         submitButtonState={editSubmitButtonState}
       />

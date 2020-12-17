@@ -4,35 +4,6 @@ const User = require('../models/user.js');
 const { checkErrors } = require('../utils/utils.js');
 const { getJwtToken } = require('../utils/jwt.js');
 
-const getUsers = (req, res) => {
-  User.find()
-    .then((data) => res.status(200).send(data))
-    .catch((err) => checkErrors(res, err));
-};
-
-// eslint-disable-next-line consistent-return
-const getUser = (req, res) => {
-  const { authorization } = req.body;
-
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    return res.status(401).send({ messagge: 'Необходима авторизация' });
-  }
-
-  const token = authorization.replace('Bearer ', '');
-
-  try {
-    jwt.verify(token, process.env.SECRET_KEY);
-  } catch (err) {
-    return res.status(401).send({ messagge: 'Необходима авторизация' });
-  }
-
-  const { userId } = req.params;
-  return User.findById(userId)
-    .orFail(new Error('notValidId'))
-    .then((user) => res.status(200).send(user))
-    .catch((err) => checkErrors(res, err));
-};
-
 const getCurrentUserInfo = (req, res) => {
   const { authorization } = req.headers;
 
@@ -57,7 +28,7 @@ const getCurrentUserInfo = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  const userId = req.user._id;
+  const userId = req.body.id;
   return User.findByIdAndUpdate(userId, {
     name: req.body.name,
     about: req.body.about,
@@ -144,12 +115,41 @@ const login = (req, res) => {
     .catch((err) => res.status(401).send({ message: err.message }));
 };
 
+const getUsers = (req, res) => {
+  User.find()
+    .then((data) => res.status(200).send(data))
+    .catch((err) => checkErrors(res, err));
+};
+
+// eslint-disable-next-line consistent-return
+const getUser = (req, res) => {
+  const { authorization } = req.body;
+
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    return res.status(401).send({ messagge: 'Необходима авторизация' });
+  }
+
+  const token = authorization.replace('Bearer ', '');
+
+  try {
+    jwt.verify(token, process.env.SECRET_KEY);
+  } catch (err) {
+    return res.status(401).send({ messagge: 'Необходима авторизация' });
+  }
+
+  const { userId } = req.params;
+  return User.findById(userId)
+    .orFail(new Error('notValidId'))
+    .then((user) => res.status(200).send(user))
+    .catch((err) => checkErrors(res, err));
+};
+
 module.exports = {
-  getUsers,
-  getUser,
   getCurrentUserInfo,
   updateUser,
   updateUserAvatar,
   createUser,
   login,
+  getUsers,
+  getUser,
 };
