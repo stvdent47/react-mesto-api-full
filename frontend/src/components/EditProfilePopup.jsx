@@ -21,6 +21,7 @@ const EditProfilePopup = (props) => {
     props.onUpdateUser({
       name,
       about: description,
+      id: props.currentUser.id,
     });
   };
   

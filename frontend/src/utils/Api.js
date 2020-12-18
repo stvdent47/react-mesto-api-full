@@ -1,7 +1,6 @@
 class Api {
-  constructor({ url, headers }) {
+  constructor({ url }) {
     this._url = url;
-    this._headers = headers;
   }
   /**
    * checking on errors: if a fetch is ok, returns json, if not shows an error
@@ -21,7 +20,43 @@ class Api {
   getProfileInfo() {
     return fetch(`${this._url}/users/me`, {
       method: 'GET',
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json',
+      },
+    }).then(this._checkErrors);
+  }
+  /**
+   * editing user profile info on the server
+   */
+  editProfile(info) {
+    return fetch(`${this._url}/users/me`, {
+      method: 'PATCH',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: info.name,
+        about: info.about,
+        id: info.id,
+      }),
+    }).then(this._checkErrors);
+  }
+  /**
+   * updating profile avatar on the server
+   */
+  updateAvatar({ avatarUrl, id }) {
+    return fetch(`${this._url}/users/me/avatar`, {
+      method: 'PATCH',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        avatarUrl,
+        id,
+      }),
     }).then(this._checkErrors);
   }
   /**
@@ -31,31 +66,6 @@ class Api {
     return fetch(`${this._url}/cards`, {
       method: 'GET',
       headers: this._headers,
-    }).then(this._checkErrors);
-  }
-  /**
-   * editing user profile info on the server
-   */
-  editProfile(info) {
-    return fetch(`${this._url}/users/me`, {
-      method: 'PATCH',
-      headers: this._headers,
-      body: JSON.stringify({
-        name: info.name,
-        about: info.about,
-      }),
-    }).then(this._checkErrors);
-  }
-  /**
-   * updating profile avatar on the server
-   */
-  updateAvatar(avatarUrl) {
-    return fetch(`${this._url}/users/me/avatar`, {
-      method: 'PATCH',
-      headers: this._headers,
-      body: JSON.stringify({
-        avatar: avatarUrl,
-      }),
     }).then(this._checkErrors);
   }
   /**
@@ -100,11 +110,5 @@ class Api {
   }
 }
 
-const api = new Api({
-  url: env.BASE_URL,
-  headers: {
-    authorization: '1ed91742-56fd-4a56-812b-580db32d6be2',
-    'Content-Type': 'application/json',
-  },
-});
+const api = new Api({ url: env.BASE_URL });
 export default api;
