@@ -8,20 +8,18 @@
     "@testing-library/user-event": "^7.2.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-dotenv": "^0.1.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-dotenv && react-scripts start",
+    "build": "react-dotenv && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "ghdeploy": "gh-pages -d build",
     "deploy": "npm run build && scp -r ./build/* stvdent47@84.201.133.252:/home/stvdent47/yndx/react-mesto-api-full/frontend"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [
@@ -38,5 +36,10 @@
   "devDependencies": {
     "gh-pages": "^3.1.0",
     "prettier": "2.1.2"
+  },
+  "react-dotenv": {
+    "whitelist": [
+      "BASE_URL"
+    ]
   }
 }
