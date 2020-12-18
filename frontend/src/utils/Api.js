@@ -65,7 +65,10 @@ class Api {
   getCards() {
     return fetch(`${this._url}/cards`, {
       method: 'GET',
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json',
+      },
     }).then(this._checkErrors);
   }
   /**

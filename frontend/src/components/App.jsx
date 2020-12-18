@@ -150,7 +150,6 @@ const App = () => {
     auth
       .signin(email, password)
       .then((res) => {
-        console.log(res);
         const { name, email, about, avatar, _id } = res.user;
         if (res.token) {
           localStorage.setItem('jwt', res.token);
@@ -236,15 +235,10 @@ const App = () => {
   };
 
   useEffect(() => {
-    // Promise.all([api.getProfileInfo(), api.getCards()])
-    //   .then((res) => {
-    //     const [userInfo, initialCards] = res;
-    //     setCurrentUser(userInfo);
-    //     setCards(initialCards);
-    //   })
-    //   .catch((err) => console.error(err));
     tokenCheck();
   }, []);
+
+  const renderCards = () => api.getCards().then((cards) => setCards(cards));
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -272,6 +266,7 @@ const App = () => {
           onEditAvatar={openEditAvatarModal}
           onCardClick={handleCardClick}
           cards={cards}
+          renderCards={renderCards}
           onCardLike={handleCardLike}
           onCardDelete={handleCardDelete}
           handleSignOut={handleSignOut}
