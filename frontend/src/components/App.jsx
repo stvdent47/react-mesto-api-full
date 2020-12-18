@@ -226,7 +226,11 @@ const App = () => {
   const handleSignOut = () => {
     localStorage.removeItem('jwt');
     setCurrentUser({
+      name: '',
       email: '',
+      about: '',
+      avatar: '',
+      id: '',
     });
     setLoggedIn(false);
   };

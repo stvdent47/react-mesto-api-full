@@ -124,7 +124,6 @@ const getUsers = (req, res) => {
     .then((data) => res.status(200).send(data))
     .catch((err) => checkErrors(res, err));
 };
-
 // eslint-disable-next-line consistent-return
 const getUser = (req, res) => {
   const { authorization } = req.body;
