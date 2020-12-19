@@ -28,8 +28,36 @@ const deleteCard = (req, res) => {
     .catch((err) => checkErrors(res, err));
 };
 
+const addLike = (req, res) => {
+  const { userId } = req.body;
+  const { cardId } = req.params;
+  Card.findByIdAndUpdate(
+    cardId,
+    { $addToSet: { likes: userId } },
+    { new: true },
+  )
+    .orFail(new Error('notValidId'))
+    .then((card) => res.status(200).send(card))
+    .catch((err) => checkErrors(res, err));
+};
+
+const removeLike = (req, res) => {
+  const { userId } = req.body;
+  const { cardId } = req.params;
+  Card.findByIdAndUpdate(
+    cardId,
+    { $pull: { likes: userId } },
+    { new: true },
+  )
+    .orFail(new Error('notValidId'))
+    .then((card) => res.status(200).send(card))
+    .catch((err) => checkErrors(res, err));
+};
+
 module.exports = {
   getCards,
   createCard,
   deleteCard,
+  addLike,
+  removeLike,
 };

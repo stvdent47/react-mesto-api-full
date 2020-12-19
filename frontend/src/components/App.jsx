@@ -112,9 +112,9 @@ const App = () => {
   };
 
   const handleCardLike = (card) => {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.find((item) => item === currentUser.id);
     api
-      .changeLikeCardStatus(card._id, isLiked)
+      .changeLikeCardStatus(card._id, isLiked, currentUser.id)
       .then((newCard) => {
         const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
         setCards(newCards);
@@ -239,7 +239,9 @@ const App = () => {
     tokenCheck();
   }, []);
 
-  const renderCards = () => api.getCards().then((cards) => setCards(cards.reverse()));
+  const renderCards = () => api.getCards().then((cards) => {
+    console.log(cards)
+    setCards(cards.reverse())});
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

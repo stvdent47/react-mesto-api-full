@@ -4,7 +4,7 @@ const Card = React.memo((props) => {
   const isOwner = props.card.owner === props.currentUser.id;
   const cardDeleteButtonClassName = `photo-elements__delete-button ${!isOwner && 'photo-elements__delete-button_hidden'}`;
 
-  const isLiked = props.card.likes.some((i) => i._id === props.currentUser.id);
+  const isLiked = props.card.likes.some((i) => i === props.currentUser.id);
   const cardLikeButtonClassName = `photo-elements__like-button ${isLiked && 'photo-elements__like-button_active'}`;
 
   const handleCardClick = () => {
