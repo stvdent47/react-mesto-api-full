@@ -8,12 +8,12 @@ const getCards = (req, res) => {
 };
 
 const createCard = (req, res) => {
-  const { name, link } = req.body;
+  const { name, link, owner } = req.body;
 
   Card.create({
     name,
     link,
-    owner: req.user._id,
+    owner,
     createdAt: Date.now(),
   })
     .then((card) => res.status(200).send(card))
@@ -28,8 +28,36 @@ const deleteCard = (req, res) => {
     .catch((err) => checkErrors(res, err));
 };
 
+const addLike = (req, res) => {
+  const { userId } = req.body;
+  const { cardId } = req.params;
+  Card.findByIdAndUpdate(
+    cardId,
+    { $addToSet: { likes: userId } },
+    { new: true },
+  )
+    .orFail(new Error('notValidId'))
+    .then((card) => res.status(200).send(card))
+    .catch((err) => checkErrors(res, err));
+};
+
+const removeLike = (req, res) => {
+  const { userId } = req.body;
+  const { cardId } = req.params;
+  Card.findByIdAndUpdate(
+    cardId,
+    { $pull: { likes: userId } },
+    { new: true },
+  )
+    .orFail(new Error('notValidId'))
+    .then((card) => res.status(200).send(card))
+    .catch((err) => checkErrors(res, err));
+};
+
 module.exports = {
   getCards,
   createCard,
   deleteCard,
+  addLike,
+  removeLike,
 };

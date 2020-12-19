@@ -3,7 +3,6 @@ import Card from './Card.jsx';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import Header from './Header.jsx';
 import Footer from './Footer.jsx';
-import api from '../utils/Api.js';
 
 const Main = (props) => {
   const currentUser = useContext(CurrentUserContext);
@@ -49,6 +48,7 @@ const Main = (props) => {
                 <Card
                   card={item}
                   key={item._id}
+                  currentUser={props.currentUser}
                   onCardClick={props.onCardClick}
                   onCardLike={props.onCardLike}
                   onCardDelete={props.onCardDelete}
