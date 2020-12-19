@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { celebrate, Joi, errors } = require('celebrate');
+
 const auth = require('./middlewares/auth.js');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
@@ -24,14 +26,25 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 
 app.use(bodyParser.json());
-app.post('/signup', createUser);
-app.post('/signin', login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required(),
+    password: Joi.string().required(),
+  }),
+}), createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required(),
+    password: Joi.string().required(),
+  }),
+}), login);
 app.use('/users', userRouter);
 app.use('/cards', auth, cardRouter);
 // eslint-disable-next-line no-unused-vars
 app.use('*', (req, res) => {
   throw new NotFoundError('Запрашиваемый ресурс не найден');
 });
+app.use(errors());
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({
