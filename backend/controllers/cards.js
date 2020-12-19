@@ -1,13 +1,12 @@
 const Card = require('../models/card.js');
-const { checkErrors } = require('../utils/utils.js');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   Card.find()
     .then((card) => res.status(200).send(card))
-    .catch((err) => checkErrors(res, err));
+    .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link, owner } = req.body;
 
   Card.create({
@@ -17,18 +16,18 @@ const createCard = (req, res) => {
     createdAt: Date.now(),
   })
     .then((card) => res.status(200).send(card))
-    .catch((err) => checkErrors(res, err));
+    .catch(next);
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
   Card.findByIdAndRemove(cardId)
     .orFail(new Error('notValidId'))
     .then((card) => res.status(200).send(card))
-    .catch((err) => checkErrors(res, err));
+    .catch(next);
 };
 
-const addLike = (req, res) => {
+const addLike = (req, res, next) => {
   const { userId } = req.body;
   const { cardId } = req.params;
   Card.findByIdAndUpdate(
@@ -38,10 +37,10 @@ const addLike = (req, res) => {
   )
     .orFail(new Error('notValidId'))
     .then((card) => res.status(200).send(card))
-    .catch((err) => checkErrors(res, err));
+    .catch(next);
 };
 
-const removeLike = (req, res) => {
+const removeLike = (req, res, next) => {
   const { userId } = req.body;
   const { cardId } = req.params;
   Card.findByIdAndUpdate(
@@ -51,7 +50,7 @@ const removeLike = (req, res) => {
   )
     .orFail(new Error('notValidId'))
     .then((card) => res.status(200).send(card))
-    .catch((err) => checkErrors(res, err));
+    .catch(next);
 };
 
 module.exports = {
