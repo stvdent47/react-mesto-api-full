@@ -99,6 +99,7 @@ const App = () => {
       .addCard({
         name: data.name,
         link: data.link,
+        owner: currentUser.id,
       })
       .then((res) => {
         setCards([res, ...cards]);
@@ -111,9 +112,9 @@ const App = () => {
   };
 
   const handleCardLike = (card) => {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.find((item) => item === currentUser.id);
     api
-      .changeLikeCardStatus(card._id, isLiked)
+      .changeLikeCardStatus(card._id, isLiked, currentUser.id)
       .then((newCard) => {
         const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
         setCards(newCards);
@@ -123,7 +124,7 @@ const App = () => {
 
   const handleCardDelete = (card) => {
     api
-      .removeCard(card._id)
+      .deleteCard(card._id)
       .then(() => {
         const newCards = cards.filter((item) => item._id !== card._id);
         setCards(newCards);
@@ -150,7 +151,6 @@ const App = () => {
     auth
       .signin(email, password)
       .then((res) => {
-        console.log(res);
         const { name, email, about, avatar, _id } = res.user;
         if (res.token) {
           localStorage.setItem('jwt', res.token);
@@ -236,15 +236,10 @@ const App = () => {
   };
 
   useEffect(() => {
-    // Promise.all([api.getProfileInfo(), api.getCards()])
-    //   .then((res) => {
-    //     const [userInfo, initialCards] = res;
-    //     setCurrentUser(userInfo);
-    //     setCards(initialCards);
-    //   })
-    //   .catch((err) => console.error(err));
     tokenCheck();
   }, []);
+
+  const renderCards = () => api.getCards().then((cards) => setCards(cards.reverse()));
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -267,11 +262,13 @@ const App = () => {
           path='/feed'
           component={Main}
           loggedIn={loggedIn}
+          currentUser={currentUser}
           onEditProfile={openEditProfileModal}
           onAddPlace={openAddPlaceModal}
           onEditAvatar={openEditAvatarModal}
           onCardClick={handleCardClick}
           cards={cards}
+          renderCards={renderCards}
           onCardLike={handleCardLike}
           onCardDelete={handleCardDelete}
           handleSignOut={handleSignOut}

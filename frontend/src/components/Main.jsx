@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Card from './Card.jsx';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import Header from './Header.jsx';
@@ -6,6 +6,9 @@ import Footer from './Footer.jsx';
 
 const Main = (props) => {
   const currentUser = useContext(CurrentUserContext);
+  useEffect(() => {
+    props.renderCards();
+  }, [])
 
   return (
     <>
@@ -45,6 +48,7 @@ const Main = (props) => {
                 <Card
                   card={item}
                   key={item._id}
+                  currentUser={props.currentUser}
                   onCardClick={props.onCardClick}
                   onCardLike={props.onCardLike}
                   onCardDelete={props.onCardDelete}
