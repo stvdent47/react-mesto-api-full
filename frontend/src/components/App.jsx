@@ -99,6 +99,7 @@ const App = () => {
       .addCard({
         name: data.name,
         link: data.link,
+        owner: currentUser.id,
       })
       .then((res) => {
         setCards([res, ...cards]);
@@ -238,7 +239,7 @@ const App = () => {
     tokenCheck();
   }, []);
 
-  const renderCards = () => api.getCards().then((cards) => setCards(cards));
+  const renderCards = () => api.getCards().then((cards) => setCards(cards.reverse()));
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -261,6 +262,7 @@ const App = () => {
           path='/feed'
           component={Main}
           loggedIn={loggedIn}
+          currentUser={currentUser}
           onEditProfile={openEditProfileModal}
           onAddPlace={openAddPlaceModal}
           onEditAvatar={openEditAvatarModal}

@@ -8,12 +8,12 @@ const getCards = (req, res) => {
 };
 
 const createCard = (req, res) => {
-  const { name, link } = req.body;
+  const { name, link, owner } = req.body;
 
   Card.create({
     name,
     link,
-    owner: req.user._id,
+    owner,
     createdAt: Date.now(),
   })
     .then((card) => res.status(200).send(card))

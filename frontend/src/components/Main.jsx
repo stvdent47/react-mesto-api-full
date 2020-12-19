@@ -49,6 +49,7 @@ const Main = (props) => {
                 <Card
                   card={item}
                   key={item._id}
+                  currentUser={props.currentUser}
                   onCardClick={props.onCardClick}
                   onCardLike={props.onCardLike}
                   onCardDelete={props.onCardDelete}

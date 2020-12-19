@@ -74,13 +74,17 @@ class Api {
   /**
    * adding a new card to the server
    */
-  addCard({ name, link }) {
+  addCard({ name, link, owner }) {
     return fetch(`${this._url}/cards`, {
       method: 'POST',
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
-        name: name,
-        link: link,
+        name,
+        link,
+        owner,
       }),
     }).then(this._checkErrors);
   }
