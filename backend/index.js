@@ -15,11 +15,11 @@ const NotFoundError = require('./errors/NotFoundError.js');
 const { PORT = 3000 } = process.env;
 const app = express();
 const corsOptions = {
-  origin: '*',
-  preflightContinue: true,
+  origin: process.env.CORS_ORIGIN,
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
+app.options('*', cors());
 
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
