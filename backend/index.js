@@ -15,7 +15,7 @@ const NotFoundError = require('./errors/NotFoundError.js');
 const { PORT = 3000 } = process.env;
 const app = express();
 const corsOptions = {
-  origin: '*',
+  origin: 'https://www.stvdent47.students.nomoredomains.icu' || 'https://stvdent47.students.nomoredomains.icu',
   optionsSuccessStatus: 200,
 };
 app.use(express.json(), cors(corsOptions));
