@@ -18,7 +18,7 @@ const corsOptions = {
   origin: 'https://www.stvdent47.students.nomoredomains.icu' || 'https://stvdent47.students.nomoredomains.icu',
   optionsSuccessStatus: 200,
 };
-app.use(express.json(), cors(corsOptions));
+app.use(cors(corsOptions));
 
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
