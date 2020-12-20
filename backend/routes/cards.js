@@ -8,7 +8,7 @@ const {
   removeLike,
 } = require('../controllers/cards.js');
 
-cardRouter.get('/', getCards);
+cardRouter.get('/cards', getCards);
 
 cardRouter.post('/', celebrate({
   body: Joi.object().keys({
