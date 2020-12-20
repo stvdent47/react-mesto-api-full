@@ -57,6 +57,7 @@ class Api {
   getCards() {
     return fetch(`${this._url}/cards`, {
       method: 'GET',
+      mode: 'no-cors',
       headers: this._headers,
     }).then(this._checkErrors);
   }
