@@ -6,9 +6,9 @@ import Footer from './Footer.jsx';
 
 const Main = (props) => {
   const currentUser = useContext(CurrentUserContext);
-  useEffect(() => {
-    props.renderCards();
-  }, [])
+  // useEffect(() => {
+  //   props.renderCards();
+  // }, [])
 
   return (
     <>
