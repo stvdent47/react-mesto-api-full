@@ -50,7 +50,7 @@ app.post('/signin', celebrate({
 }), login);
 
 app.use('/users', userRouter);
-app.use('/cards', auth, cardRouter);
+app.use('/cards', cardRouter);
 // eslint-disable-next-line no-unused-vars
 app.use('*', (req, res) => {
   throw new NotFoundError('Запрашиваемый ресурс не найден');

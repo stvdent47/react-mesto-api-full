@@ -163,7 +163,6 @@ const App = () => {
           });
           setLoggedIn(true);
           history.push('/feed');
-          renderCards();
         }
       })
       .catch((err) => console.error(err));
@@ -218,7 +217,6 @@ const App = () => {
             });
             setLoggedIn(true);
             history.push('/feed');
-            renderCards();
           }
         })
         .catch((err) => console.error(err));
