@@ -1,6 +1,7 @@
 const Card = require('../models/card.js');
 
 const getCards = (req, res, next) => {
+  console.log('cards controller');
   Card.find()
     .then((card) => res.status(200).send(card))
     .catch(next);
