@@ -55,7 +55,7 @@ class Api {
    * getting cards from the server
    */
   getCards() {
-    return fetch(`${this._url}/cards/cards`, {
+    return fetch(`${this._url}/cards`, {
       method: 'GET',
       headers: this._headers,
     }).then(this._checkErrors);
