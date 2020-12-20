@@ -1,9 +1,10 @@
 const Card = require('../models/card.js');
 
 const getCards = (req, res, next) => {
+  console.log('object');
   Card.find()
     .then((card) => res.status(200).send(card))
-    .catch((err) => console.error(err));
+    .catch(next);
 };
 
 const createCard = (req, res, next) => {
