@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-// const cors = require('cors');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi, errors } = require('celebrate');
@@ -14,17 +14,12 @@ const NotFoundError = require('./errors/NotFoundError.js');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-// const corsOptions = {
-//   origin: process.env.CORS_ORIGIN,
-//   optionsSuccessStatus: 200,
-// };
-// app.use(cors(corsOptions));
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', '*');
-  res.setHeader('Access-Control-Allow-Headers', '*');
-  next();
-});
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN,
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
