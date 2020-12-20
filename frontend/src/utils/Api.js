@@ -88,7 +88,7 @@ class Api {
    * @param {*} cardId is used to identify a card that is to changed
    * @param {*} isLiked is used to identify whether a card is liked or not
    */
-  changeLikeCardStatus(cardId, isLiked, userId ) {
+  changeLikeCardStatus(cardId, isLiked, userId) {
     if (isLiked) {
       return fetch(`${this._url}/cards/${cardId}/likes`, {
         method: 'DELETE',
