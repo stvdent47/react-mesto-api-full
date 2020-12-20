@@ -18,8 +18,8 @@ const corsOptions = {
   origin: process.env.CORS_ORIGIN,
   optionsSuccessStatus: 200,
 };
-app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
+app.use(cors(corsOptions));
 
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
