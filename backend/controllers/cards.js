@@ -2,10 +2,7 @@ const Card = require('../models/card.js');
 
 const getCards = (req, res, next) => {
   Card.find()
-    .then((card) => {
-      res.set('Access-Control-Allow-Origin', '*');
-      res.status(200).send(card);
-    })
+    .then((card) => res.status(200).send(card))
     .catch(next);
 };
 
