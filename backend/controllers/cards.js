@@ -1,6 +1,7 @@
 const Card = require('../models/card.js');
 
 const getCards = (req, res, next) => {
+  console.log('cards controller');
   Card.find()
     .then((card) => res.status(200).send(card))
     .catch(next);
@@ -9,7 +10,7 @@ const getCards = (req, res, next) => {
 const createCard = (req, res, next) => {
   const { name, link, owner } = req.body;
 
-  return Card.create({
+  Card.create({
     name,
     link,
     owner,
@@ -21,7 +22,7 @@ const createCard = (req, res, next) => {
 
 const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  return Card.findByIdAndRemove(cardId)
+  Card.findByIdAndRemove(cardId)
     .orFail(new Error('notValidId'))
     .then((card) => res.status(200).send(card))
     .catch(next);
@@ -30,7 +31,7 @@ const deleteCard = (req, res, next) => {
 const addLike = (req, res, next) => {
   const { userId } = req.body;
   const { cardId } = req.params;
-  return Card.findByIdAndUpdate(
+  Card.findByIdAndUpdate(
     cardId,
     { $addToSet: { likes: userId } },
     { new: true },
@@ -43,7 +44,7 @@ const addLike = (req, res, next) => {
 const removeLike = (req, res, next) => {
   const { userId } = req.body;
   const { cardId } = req.params;
-  return Card.findByIdAndUpdate(
+  Card.findByIdAndUpdate(
     cardId,
     { $pull: { likes: userId } },
     { new: true },
