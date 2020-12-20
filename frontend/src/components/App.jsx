@@ -239,7 +239,7 @@ const App = () => {
     tokenCheck();
   }, []);
 
-  const renderCards = () => api.getCards().then((cards) => setCards(cards.reverse()));
+  const renderCards = (jwt) => api.getCards(jwt).then((cards) => setCards(cards.reverse()));
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

@@ -54,10 +54,13 @@ class Api {
   /**
    * getting cards from the server
    */
-  getCards() {
+  getCards(token) {
     return fetch(`${this._url}/cards`, {
       method: 'GET',
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
     }).then(this._checkErrors);
   }
   /**

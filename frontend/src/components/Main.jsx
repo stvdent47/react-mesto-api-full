@@ -7,7 +7,8 @@ import Footer from './Footer.jsx';
 const Main = (props) => {
   const currentUser = useContext(CurrentUserContext);
   useEffect(() => {
-    props.renderCards();
+    const jwt = localStorage.getItem('jwt');
+    props.renderCards(jwt);
   }, [])
 
   return (
