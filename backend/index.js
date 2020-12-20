@@ -14,12 +14,12 @@ const NotFoundError = require('./errors/NotFoundError.js');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-// const corsOptions = {
-//   origin: process.env.CORS_ORIGIN,
-//   optionsSuccessStatus: 200,
-// };
-// app.use(cors(corsOptions));
-app.use(cors());
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN,
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
+
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useFindAndModify: false,
@@ -40,6 +40,9 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required(),
     password: Joi.string().required(),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string(),
   }),
 }), createUser);
 app.post('/signin', celebrate({
@@ -50,7 +53,7 @@ app.post('/signin', celebrate({
 }), login);
 
 app.use('/users', userRouter);
-app.use('/cards', auth, cardRouter);
+app.use('/', auth, cardRouter);
 // eslint-disable-next-line no-unused-vars
 app.use('*', (req, res) => {
   throw new NotFoundError('Запрашиваемый ресурс не найден');

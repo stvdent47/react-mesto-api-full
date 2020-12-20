@@ -8,9 +8,9 @@ const {
   removeLike,
 } = require('../controllers/cards.js');
 
-cardRouter.get('/', getCards);
+cardRouter.get('/cards', getCards);
 
-cardRouter.post('/', celebrate({
+cardRouter.post('/cards', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     link: Joi.string().required(),
@@ -18,15 +18,15 @@ cardRouter.post('/', celebrate({
   }),
 }), createCard);
 
-cardRouter.delete('/:cardId', deleteCard);
+cardRouter.delete('/cards/:cardId', deleteCard);
 
-cardRouter.put('/:cardId/likes', celebrate({
+cardRouter.put('/cards/:cardId/likes', celebrate({
   body: Joi.object().keys({
     userId: Joi.string().required(),
   }),
 }), addLike);
 
-cardRouter.delete('/:cardId/likes', celebrate({
+cardRouter.delete('/cards/:cardId/likes', celebrate({
   body: Joi.object().keys({
     userId: Joi.string().required(),
   }),
