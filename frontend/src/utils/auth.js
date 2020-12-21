@@ -32,7 +32,7 @@ export const signin = (email, password) => {
     .then(resCheck);
 }
 
-export const getContent = (token) => {
+export const getCurrentUserInfo = (token) => {
   return fetch(`${env.BASE_URL}/users/me`, {
     method: 'GET',
     headers: {

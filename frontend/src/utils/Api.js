@@ -27,28 +27,24 @@ class Api {
   /**
    * editing user profile info on the server
    */
-  editProfile(info) {
+  updateUser(info) {
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
         name: info.name,
         about: info.about,
-        id: info.id,
       }),
     }).then(this._checkErrors);
   }
   /**
    * updating profile avatar on the server
    */
-  updateAvatar({ avatarUrl, id }) {
+  updateUserAvatar({ avatarUrl }) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
-      body: JSON.stringify({
-        avatarUrl,
-        id,
-      }),
+      body: JSON.stringify({ avatarUrl }),
     }).then(this._checkErrors);
   }
   /**
@@ -66,14 +62,13 @@ class Api {
   /**
    * adding a new card to the server
    */
-  addCard({ name, link, owner }) {
+  createCard({ name, link }) {
     return fetch(`${this._url}/cards`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
         name,
         link,
-        owner,
       }),
     }).then(this._checkErrors);
   }
@@ -91,22 +86,16 @@ class Api {
    * @param {*} cardId is used to identify a card that is to changed
    * @param {*} isLiked is used to identify whether a card is liked or not
    */
-  changeLikeCardStatus(cardId, isLiked, userId) {
+  changeLikeCardStatus(cardId, isLiked) {
     if (isLiked) {
       return fetch(`${this._url}/cards/${cardId}/likes`, {
         method: 'DELETE',
         headers: this._headers,
-        body: JSON.stringify({
-          userId,
-        }),
       }).then(this._checkErrors);
     } else {
       return fetch(`${this._url}/cards/${cardId}/likes`, {
         method: 'PUT',
         headers: this._headers,
-        body: JSON.stringify({
-          userId,
-        }),
       }).then(this._checkErrors);
     }
   }

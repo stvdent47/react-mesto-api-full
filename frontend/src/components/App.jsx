@@ -38,7 +38,7 @@ const App = () => {
   const handleUpdateUser = (data) => {
     seteditSubmitButtonState('Сохранение...');
     api
-      .editProfile(data)
+      .updateUser(data)
       .then((res) => {
         const { name, about } = res;
         setCurrentUser({
@@ -63,10 +63,10 @@ const App = () => {
     setIsEditAvatarPopupOpen(true);
   };
 
-  const handleUpdateAvatar = ({ avatarUrl, id }) => {
+  const handleUpdateAvatar = ({ avatarUrl }) => {
     setAvatarUpdateSubmitButtonState('Сохранение...');
     api
-      .updateAvatar({ avatarUrl, id })
+      .updateUserAvatar({ avatarUrl })
       .then((res) => {
         const { avatar } = res;
         setCurrentUser({ ...currentUser, avatar });
@@ -96,10 +96,9 @@ const App = () => {
   const handleAddPlace = (data) => {
     setAddCardSubmitButtonState('Сохранение...');
     api
-      .addCard({
+      .createCard({
         name: data.name,
         link: data.link,
-        owner: currentUser.id,
       })
       .then((res) => {
         setCards([res, ...cards]);
@@ -114,7 +113,7 @@ const App = () => {
   const handleCardLike = (card) => {
     const isLiked = card.likes.find((item) => item === currentUser.id);
     api
-      .changeLikeCardStatus(card._id, isLiked, currentUser.id)
+      .changeLikeCardStatus(card._id, isLiked)
       .then((newCard) => {
         const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
         setCards(newCards);
@@ -151,7 +150,7 @@ const App = () => {
     auth
       .signin(email, password)
       .then((res) => {
-        const { name, email, about, avatar, _id } = res.user;
+        const { name, email, about, avatar, id } = res;
         if (res.token) {
           localStorage.setItem('jwt', res.token);
           setCurrentUser({
@@ -159,7 +158,7 @@ const App = () => {
             email,
             about,
             avatar,
-            id: _id,
+            id,
           });
           setLoggedIn(true);
           history.push('/feed');
@@ -204,7 +203,7 @@ const App = () => {
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
       auth
-        .getContent(jwt)
+        .getCurrentUserInfo(jwt)
         .then((user) => {
           if (user) {
             const { name, email, about, avatar, _id } = user;

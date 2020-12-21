@@ -10,7 +10,7 @@ const Main = (props) => {
 
   useEffect(() => {
     props.renderCards(jwt);
-  }, [])
+  }, []);
 
   return (
     <>

@@ -5,6 +5,7 @@ const { getJwtToken } = require('../utils/jwt.js');
 const AuthError = require('../errors/AuthError.js');
 const BadRequestError = require('../errors/BadRequestError.js');
 const UniqueError = require('../errors/UniqueError.js');
+const NotFoundError = require('../errors/NotFoundError.js');
 
 const getCurrentUserInfo = (req, res, next) => {
   const { authorization } = req.headers;
@@ -24,14 +25,13 @@ const getCurrentUserInfo = (req, res, next) => {
 
   const { id } = payload;
   return User.findById(id)
-    .orFail(new Error('notValidId'))
+    .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))
     .then((user) => res.status(200).send(user))
     .catch(next);
 };
 
 const updateUser = (req, res, next) => {
-  const userId = req.body.id;
-  return User.findByIdAndUpdate(userId, {
+  User.findByIdAndUpdate(req.user.id, {
     name: req.body.name,
     about: req.body.about,
   },
@@ -39,7 +39,7 @@ const updateUser = (req, res, next) => {
     new: true,
     runValidators: true,
   })
-    .orFail(new Error('ValidationError'))
+    .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))
     .then((user) => {
       const { name, about } = user;
       return res.status(200).send({ name, about });
@@ -48,14 +48,13 @@ const updateUser = (req, res, next) => {
 };
 
 const updateUserAvatar = (req, res, next) => {
-  const userId = req.body.id;
-  return User.findByIdAndUpdate(userId,
+  User.findByIdAndUpdate(req.user.id,
     { avatar: req.body.avatarUrl },
     {
       new: true,
       runValidators: true,
     })
-    .orFail(new Error('ValidationError'))
+    .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))
     .then((user) => {
       const { avatar } = user;
       return res.status(200).send({ avatar });
@@ -99,7 +98,14 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = getJwtToken(user._id);
 
-      return res.status(200).send({ user, token });
+      return res.status(200).send({
+        name: user.name,
+        email: user.email,
+        about: user.about,
+        avatar: user.avatar,
+        id: user._id,
+        token,
+      });
     })
     .catch(next);
 };
@@ -127,7 +133,7 @@ const getUser = (req, res, next) => {
 
   const { userId } = req.params;
   return User.findById(userId)
-    .orFail(new Error('notValidId'))
+    .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))
     .then((user) => res.status(200).send(user))
     .catch(next);
 };
