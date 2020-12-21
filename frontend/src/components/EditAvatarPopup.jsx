@@ -6,10 +6,7 @@ const EditAvatarPopup = (props) => {
   const handleAvatarUpdateSubmit = (e) => {
     e.preventDefault();
 
-    props.onUpdateAvatar({
-      avatarUrl: inputRef.current.value,
-      id: props.currentUser.id,
-    });
+    props.onUpdateAvatar({ avatarUrl: inputRef.current.value });
     inputRef.current.value = '';
   }
 

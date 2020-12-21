@@ -22,7 +22,7 @@ const Register = (props) => {
     e.preventDefault();
     
     const { email, password } = userData;
-    props.handleSignup(email, password);
+    props.handleSignup(email, password.trim());
   };  
 
   return (
