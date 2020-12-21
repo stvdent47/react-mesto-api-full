@@ -43,7 +43,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 const limiter = rateLimit({
-  windowMs: 50 * 1000,
+  windowMs: 5 * 1000,
   max: 10,
 });
 app.use(limiter);
