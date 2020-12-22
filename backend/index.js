@@ -10,7 +10,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 const auth = require('./middlewares/auth.js');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
-const { createUser } = require('./controllers/users.js');
+const { createUser, login } = require('./controllers/users.js');
 const NotFoundError = require('./errors/NotFoundError.js');
 
 const { PORT = 3000 } = process.env;
@@ -66,7 +66,14 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-app.use('/', userRouter);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
+}), login);
+
+app.use('/users', auth, userRouter);
 app.use('/cards', auth, cardRouter);
 // eslint-disable-next-line no-unused-vars
 app.use('*', (req, res) => {
