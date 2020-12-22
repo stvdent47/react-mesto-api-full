@@ -40,11 +40,12 @@ const App = () => {
     api
       .updateUser(data)
       .then((res) => {
-        const { name, about } = res;
+        const { name, about, id } = res;
         setCurrentUser({
           ...currentUser,
           name,
           about,
+          id,
         });
         closeAllPopups();
       })
@@ -63,10 +64,10 @@ const App = () => {
     setIsEditAvatarPopupOpen(true);
   };
 
-  const handleUpdateAvatar = ({ avatarUrl }) => {
+  const handleUpdateAvatar = ({ avatarUrl, userId }) => {
     setAvatarUpdateSubmitButtonState('Сохранение...');
     api
-      .updateUserAvatar({ avatarUrl })
+      .updateUserAvatar({ avatarUrl, userId })
       .then((res) => {
         const { avatar } = res;
         setCurrentUser({ ...currentUser, avatar });
@@ -99,6 +100,7 @@ const App = () => {
       .createCard({
         name: data.name,
         link: data.link,
+        userId: data.userId,
       })
       .then((res) => {
         setCards([res, ...cards]);
@@ -110,10 +112,10 @@ const App = () => {
       });
   };
 
-  const handleCardLike = (card) => {
+  const handleCardLike = (card, userId) => {
     const isLiked = card.likes.find((item) => item === currentUser.id);
     api
-      .changeLikeCardStatus(card._id, isLiked)
+      .changeLikeCardStatus(card._id, isLiked, userId)
       .then((newCard) => {
         const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
         setCards(newCards);
@@ -121,9 +123,9 @@ const App = () => {
       .catch((err) => console.error(err));
   };
 
-  const handleCardDelete = (card) => {
+  const handleCardDelete = (card, userId) => {
     api
-      .deleteCard(card._id)
+      .deleteCard(card._id, userId)
       .then(() => {
         const newCards = cards.filter((item) => item._id !== card._id);
         setCards(newCards);
@@ -290,6 +292,7 @@ const App = () => {
       <AddPlacePopup
         isOpen={isAddPlacePopupOpen}
         onClose={closeAllPopups}
+        currentUser={currentUser}
         onAddPlace={handleAddPlace}
         submitButtonState={addCardSubmitButtonState}
       />

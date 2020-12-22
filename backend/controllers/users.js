@@ -7,57 +7,25 @@ const BadRequestError = require('../errors/BadRequestError.js');
 const UniqueError = require('../errors/UniqueError.js');
 const NotFoundError = require('../errors/NotFoundError.js');
 
-const getCurrentUserInfo = (req, res, next) => {
-  const { authorization } = req.headers;
+const login = (req, res, next) => {
+  const { email, password } = req.body;
 
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw new AuthError('Необходима авторизация');
+  if (!email || !password) {
+    throw new AuthError('Переданные данные некорректны');
   }
 
-  const token = authorization.replace('Bearer ', '');
-
-  let payload;
-  try {
-    payload = jwt.verify(token, process.env.SECRET_KEY = 'dev-key');
-  } catch (err) {
-    throw new AuthError('Необходима авторизация');
-  }
-
-  const { id } = payload;
-  return User.findById(id)
-    .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))
-    .then((user) => res.status(200).send(user))
-    .catch(next);
-};
-
-const updateUser = (req, res, next) => {
-  User.findByIdAndUpdate(req.user.id, {
-    name: req.body.name,
-    about: req.body.about,
-  },
-  {
-    new: true,
-    runValidators: true,
-  })
-    .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))
+  User.findUserByCredentials(email, password)
     .then((user) => {
-      const { name, about } = user;
-      return res.status(200).send({ name, about });
-    })
-    .catch(next);
-};
+      const token = getJwtToken(user._id);
 
-const updateUserAvatar = (req, res, next) => {
-  User.findByIdAndUpdate(req.user.id,
-    { avatar: req.body.avatarUrl },
-    {
-      new: true,
-      runValidators: true,
-    })
-    .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))
-    .then((user) => {
-      const { avatar } = user;
-      return res.status(200).send({ avatar });
+      return res.status(200).send({
+        name: user.name,
+        email: user.email,
+        about: user.about,
+        avatar: user.avatar,
+        id: user._id,
+        token,
+      });
     })
     .catch(next);
 };
@@ -87,25 +55,58 @@ const createUser = (req, res, next) => {
     .catch(next);
 };
 
-const login = (req, res, next) => {
-  const { email, password } = req.body;
+const getCurrentUserInfo = (req, res, next) => {
+  const { authorization } = req.headers;
 
-  if (!email || !password) {
-    throw new AuthError('Переданные данные некорректны');
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    throw new AuthError('Необходима авторизация');
   }
 
-  User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = getJwtToken(user._id);
+  const token = authorization.replace('Bearer ', '');
 
-      return res.status(200).send({
-        name: user.name,
-        email: user.email,
-        about: user.about,
-        avatar: user.avatar,
-        id: user._id,
-        token,
-      });
+  let payload;
+  try {
+    payload = jwt.verify(token, process.env.SECRET_KEY);
+  } catch (err) {
+    throw new AuthError('Необходима авторизация');
+  }
+
+  const { id } = payload;
+  return User.findById(id)
+    .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))
+    .then((user) => res.status(200).send(user))
+    .catch(next);
+};
+
+const updateUser = (req, res, next) => {
+  User.findByIdAndUpdate(req.body.id, {
+    name: req.body.name,
+    about: req.body.about,
+  },
+  {
+    new: true,
+    runValidators: true,
+  })
+    .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))
+    .then((user) => {
+      const { name, about } = user;
+      return res.status(200).send({ name, about });
+    })
+    .catch(next);
+};
+
+const updateUserAvatar = (req, res, next) => {
+  const { userId } = req.body;
+  User.findByIdAndUpdate(userId,
+    { avatar: req.body.avatarUrl },
+    {
+      new: true,
+      runValidators: true,
+    })
+    .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))
+    .then((user) => {
+      const { avatar } = user;
+      return res.status(200).send({ avatar });
     })
     .catch(next);
 };
@@ -126,7 +127,7 @@ const getUser = (req, res, next) => {
   const token = authorization.replace('Bearer ', '');
 
   try {
-    jwt.verify(token, process.env.SECRET_KEY = 'dev-key');
+    jwt.verify(token, process.env.SECRET_KEY);
   } catch (err) {
     throw new AuthError('Необходима авторизация');
   }

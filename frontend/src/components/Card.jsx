@@ -28,7 +28,7 @@ const Card = React.memo((props) => {
             type='button'
             aria-label='Нравится'
             onClick={()=> {
-              props.onCardLike(props.card)
+              props.onCardLike(props.card, props.currentUser.id);
             }}
           ></button>
           <p className='photo-elements__like-counter'>
@@ -40,7 +40,7 @@ const Card = React.memo((props) => {
           type='button'
           aria-label='Удалить'
           onClick={() => {
-            props.onCardDelete(props.card)
+            props.onCardDelete(props.card, props.currentUser.id);
           }}
         ></button>
       </div>

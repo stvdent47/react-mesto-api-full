@@ -23,12 +23,14 @@ userRouter.patch('/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().required().min(2).max(30),
+    id: Joi.string().required().length(24).hex(),
   }),
 }), updateUser);
 
 userRouter.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
     avatarUrl: Joi.string().required().custom(linkValidator),
+    userId: Joi.string().required().length(24).hex(),
   }),
 }), updateUserAvatar);
 // userRouter.get('/', getUsers);
