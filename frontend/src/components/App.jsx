@@ -160,8 +160,7 @@ const App = () => {
             avatar,
             id,
           });
-          setLoggedIn(true);
-          history.push('/feed');
+          tokenCheck();
         }
       })
       .catch((err) => console.error(err));
