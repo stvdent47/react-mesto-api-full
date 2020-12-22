@@ -18,6 +18,15 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = getJwtToken(user._id);
 
+      let payload;
+
+      try {
+        payload = jwt.verify(token, process.env.SECRET_KEY);
+      } catch (err) {
+        throw new AuthError('Необходима авторизация');
+      }
+
+      req.user = payload;
       return res.status(200).send({
         name: user.name,
         email: user.email,
@@ -79,7 +88,7 @@ const getCurrentUserInfo = (req, res, next) => {
 };
 
 const updateUser = (req, res, next) => {
-  User.findByIdAndUpdate(req.body.id, {
+  User.findByIdAndUpdate(req.user.id, {
     name: req.body.name,
     about: req.body.about,
   },
@@ -96,8 +105,7 @@ const updateUser = (req, res, next) => {
 };
 
 const updateUserAvatar = (req, res, next) => {
-  const { userId } = req.body;
-  User.findByIdAndUpdate(userId,
+  User.findByIdAndUpdate(req.user.id,
     { avatar: req.body.avatarUrl },
     {
       new: true,

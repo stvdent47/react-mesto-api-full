@@ -40,12 +40,11 @@ const App = () => {
     api
       .updateUser(data)
       .then((res) => {
-        const { name, about, id } = res;
+        const { name, about } = res;
         setCurrentUser({
           ...currentUser,
           name,
           about,
-          id,
         });
         closeAllPopups();
       })
@@ -64,10 +63,10 @@ const App = () => {
     setIsEditAvatarPopupOpen(true);
   };
 
-  const handleUpdateAvatar = ({ avatarUrl, userId }) => {
+  const handleUpdateAvatar = ({ avatarUrl }) => {
     setAvatarUpdateSubmitButtonState('Сохранение...');
     api
-      .updateUserAvatar({ avatarUrl, userId })
+      .updateUserAvatar({ avatarUrl })
       .then((res) => {
         const { avatar } = res;
         setCurrentUser({ ...currentUser, avatar });
@@ -100,7 +99,6 @@ const App = () => {
       .createCard({
         name: data.name,
         link: data.link,
-        userId: data.userId,
       })
       .then((res) => {
         setCards([res, ...cards]);
@@ -112,10 +110,10 @@ const App = () => {
       });
   };
 
-  const handleCardLike = (card, userId) => {
+  const handleCardLike = (card) => {
     const isLiked = card.likes.find((item) => item === currentUser.id);
     api
-      .changeLikeCardStatus(card._id, isLiked, userId)
+      .changeLikeCardStatus(card._id, isLiked)
       .then((newCard) => {
         const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
         setCards(newCards);
@@ -123,9 +121,9 @@ const App = () => {
       .catch((err) => console.error(err));
   };
 
-  const handleCardDelete = (card, userId) => {
+  const handleCardDelete = (card) => {
     api
-      .deleteCard(card._id, userId)
+      .deleteCard(card._id)
       .then(() => {
         const newCards = cards.filter((item) => item._id !== card._id);
         setCards(newCards);

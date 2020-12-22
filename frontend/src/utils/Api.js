@@ -27,7 +27,6 @@ class Api {
       body: JSON.stringify({
         name: info.name,
         about: info.about,
-        id: info.id,
       }),
     }).then(this._checkErrors);
   }
@@ -43,7 +42,6 @@ class Api {
       },
       body: JSON.stringify({
         avatarUrl,
-        userId,
       }),
     }).then(this._checkErrors);
   }
@@ -62,7 +60,7 @@ class Api {
   /**
    * adding a new card to the server
    */
-  createCard({ name, link, userId }) {
+  createCard({ name, link }) {
     return fetch(`${this._url}/cards`, {
       method: 'POST',
       headers: {
@@ -72,23 +70,19 @@ class Api {
       body: JSON.stringify({
         name,
         link,
-        userId
       }),
     }).then(this._checkErrors);
   }
   /**
    * removing a card from the server
    */
-  deleteCard(cardId, userId) {
+  deleteCard(cardId) {
     return fetch(`${this._url}/cards/${cardId}`, {
       method: 'DELETE',
       headers: {
         authorization: `Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        userId,
-      }),
     }).then(this._checkErrors);
   }
   /**
@@ -96,7 +90,7 @@ class Api {
    * @param {*} cardId is used to identify a card that is to changed
    * @param {*} isLiked is used to identify whether a card is liked or not
    */
-  changeLikeCardStatus(cardId, isLiked, userId) {
+  changeLikeCardStatus(cardId, isLiked) {
     if (isLiked) {
       return fetch(`${this._url}/cards/${cardId}/likes`, {
         method: 'DELETE',
@@ -104,9 +98,6 @@ class Api {
           authorization: `Bearer ${localStorage.getItem('jwt')}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          userId,
-        }),
       }).then(this._checkErrors);
     } else {
       return fetch(`${this._url}/cards/${cardId}/likes`, {
@@ -115,9 +106,6 @@ class Api {
           authorization: `Bearer ${localStorage.getItem('jwt')}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          userId,
-        }),
       }).then(this._checkErrors);
     }
   }

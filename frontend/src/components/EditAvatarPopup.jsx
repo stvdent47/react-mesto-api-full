@@ -8,7 +8,6 @@ const EditAvatarPopup = (props) => {
 
     props.onUpdateAvatar({
       avatarUrl: inputRef.current.value,
-      userId: props.currentUser.id,
     });
     inputRef.current.value = '';
   }
