@@ -10,12 +10,12 @@ const getCards = (req, res, next) => {
 };
 
 const createCard = (req, res, next) => {
-  const { name, link, userId } = req.body;
+  const { name, link } = req.body;
 
   Card.create({
     name,
     link,
-    owner: userId,
+    owner: req.user.id,
     createdAt: Date.now(),
   })
     .then((card) => res.status(200).send(card))
@@ -23,13 +23,12 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  const { userId } = req.body;
   const { cardId } = req.params;
   Card.findById(cardId)
     .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))
     .then((card) => {
       if (!card) throw new CastError('Неверный id карточки');
-      if (card.owner.toString() === userId.toString()) {
+      if (card.owner.toString() === req.user.id.toString()) {
         Card.findByIdAndRemove(cardId)
           .then((cardToRemove) => res.status(200).send(cardToRemove))
           .catch(next);
@@ -41,11 +40,10 @@ const deleteCard = (req, res, next) => {
 };
 
 const addLike = (req, res, next) => {
-  const { userId } = req.body;
   const { cardId } = req.params;
   Card.findByIdAndUpdate(
     cardId,
-    { $addToSet: { likes: userId } },
+    { $addToSet: { likes: req.user.id } },
     { new: true },
   )
     .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))
@@ -54,11 +52,10 @@ const addLike = (req, res, next) => {
 };
 
 const removeLike = (req, res, next) => {
-  const { userId } = req.body;
   const { cardId } = req.params;
   Card.findByIdAndUpdate(
     cardId,
-    { $pull: { likes: userId } },
+    { $pull: { likes: req.user.id } },
     { new: true },
   )
     .orFail(new NotFoundError('Запрашиваемый ресурс не найден'))

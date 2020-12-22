@@ -11,7 +11,6 @@ const AddPlacePopup = (props) => {
     props.onAddPlace({
       name: placeName,
       link: placeLink,
-      userId: props.currentUser.id,
     });
 
     setPlaceName('');

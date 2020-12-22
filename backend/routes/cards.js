@@ -23,23 +23,19 @@ cardRouter.post('/', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     link: Joi.string().required().custom(linkValidator),
-    userId: Joi.string().required().length(24).hex(),
   }),
 }), createCard);
 
 cardRouter.delete('/:cardId', celebrate({
   params: Joi.object().keys({ cardId: Joi.string().required().length(24).hex() }),
-  body: Joi.object().keys({ userId: Joi.string().required().length(24).hex() }),
 }), deleteCard);
 
 cardRouter.put('/:cardId/likes', celebrate({
   params: Joi.object().keys({ cardId: Joi.string().required().length(24).hex() }),
-  body: Joi.object().keys({ userId: Joi.string().required().length(24).hex() }),
 }), addLike);
 
 cardRouter.delete('/:cardId/likes', celebrate({
   params: Joi.object().keys({ cardId: Joi.string().required().length(24).hex() }),
-  body: Joi.object().keys({ userId: Joi.string().required().length(24).hex() }),
 }), removeLike);
 
 module.exports = cardRouter;
