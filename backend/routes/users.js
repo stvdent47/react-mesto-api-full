@@ -1,10 +1,8 @@
 const userRouter = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
-const auth = require('../middlewares/auth.js');
 const CastError = require('../errors/CastError.js');
 const {
-  login,
   getCurrentUserInfo,
   updateUser,
   updateUserAvatar,
@@ -19,27 +17,20 @@ const linkValidator = (value) => {
   return value;
 };
 
-userRouter.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
-  }),
-}), login);
+userRouter.get('/me', getCurrentUserInfo);
 
-userRouter.get('/users/me', getCurrentUserInfo);
-
-userRouter.patch('/users/me', celebrate({
+userRouter.patch('/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().required().min(2).max(30),
   }),
-}), auth, updateUser);
+}), updateUser);
 
-userRouter.patch('/users/me/avatar', celebrate({
+userRouter.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
     avatarUrl: Joi.string().required().custom(linkValidator),
   }),
-}), auth, updateUserAvatar);
+}), updateUserAvatar);
 // userRouter.get('/', getUsers);
 // userRouter.get('/:userId', getUser);
 

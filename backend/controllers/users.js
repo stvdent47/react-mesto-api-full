@@ -18,7 +18,7 @@ const getCurrentUserInfo = (req, res, next) => {
 
   let payload;
   try {
-    payload = jwt.verify(token, process.env.SECRET_KEY);
+    payload = jwt.verify(token, process.env.SECRET_KEY = 'dev-key');
   } catch (err) {
     throw new AuthError('Необходима авторизация');
   }
@@ -126,7 +126,7 @@ const getUser = (req, res, next) => {
   const token = authorization.replace('Bearer ', '');
 
   try {
-    jwt.verify(token, process.env.SECRET_KEY);
+    jwt.verify(token, process.env.SECRET_KEY = 'dev-key');
   } catch (err) {
     throw new AuthError('Необходима авторизация');
   }
