@@ -12,7 +12,10 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, process.env.SECRET_KEY);
+    payload = jwt.verify(
+      token,
+      process.env.NODE_ENV === 'production' ? process.env.SECRET_KEY : 'dev-key',
+    );
   } catch (err) {
     throw new AuthError('Необходима авторизация');
   }
