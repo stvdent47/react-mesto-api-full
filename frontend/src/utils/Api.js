@@ -33,7 +33,7 @@ class Api {
   /**
    * updating profile avatar on the server
    */
-  updateUserAvatar({ avatarUrl, userId }) {
+  updateUserAvatar({ avatarUrl }) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
       headers: {

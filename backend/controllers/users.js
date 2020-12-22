@@ -18,15 +18,6 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = getJwtToken(user._id);
 
-      let payload;
-
-      try {
-        payload = jwt.verify(token, process.env.SECRET_KEY);
-      } catch (err) {
-        throw new AuthError('Необходима авторизация');
-      }
-
-      req.user = payload;
       return res.status(200).send({
         name: user.name,
         email: user.email,
@@ -44,6 +35,8 @@ const createUser = (req, res, next) => {
 
   if (!email || !password) {
     throw new BadRequestError('Переданные данные некорректны');
+  } else if (password.trim() === '') {
+    throw new BadRequestError('Переданные данные некорректны');
   }
 
   return User.findOne({ email })
@@ -51,7 +44,7 @@ const createUser = (req, res, next) => {
       if (user) {
         throw new UniqueError('Пользователь с таким электронным адресом уже существует');
       }
-      return bcrypt.hash(password, 10)
+      return bcrypt.hash(password.trim(), 10)
         .then((hash) => {
           User.create({
             email,
@@ -75,7 +68,10 @@ const getCurrentUserInfo = (req, res, next) => {
 
   let payload;
   try {
-    payload = jwt.verify(token, process.env.SECRET_KEY);
+    payload = jwt.verify(
+      token,
+      process.env.NODE_ENV === 'production' ? process.env.SECRET_KEY : 'dev-key',
+    );
   } catch (err) {
     throw new AuthError('Необходима авторизация');
   }
@@ -135,7 +131,10 @@ const getUser = (req, res, next) => {
   const token = authorization.replace('Bearer ', '');
 
   try {
-    jwt.verify(token, process.env.SECRET_KEY);
+    jwt.verify(
+      token,
+      process.env.NODE_ENV === 'production' ? process.env.SECRET_KEY : 'dev-key',
+    );
   } catch (err) {
     throw new AuthError('Необходима авторизация');
   }
