@@ -29,14 +29,14 @@ const App = () => {
    * profile editing
    */
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
-  const [editSubmitButtonState, seteditSubmitButtonState] = useState('Сохранить');
+  const [editSubmitButtonText, seteditSubmitButtonText] = useState('Сохранить');
 
   const openEditProfileModal = () => {
     setIsEditProfilePopupOpen(true);
   };
 
   const handleUpdateUser = (data) => {
-    seteditSubmitButtonState('Сохранение...');
+    seteditSubmitButtonText('Сохранение...');
     api
       .updateUser(data)
       .then((res) => {
@@ -50,7 +50,7 @@ const App = () => {
       })
       .catch((err) => console.error(err))
       .finally(() => {
-        seteditSubmitButtonState('Сохранить');
+        seteditSubmitButtonText('Сохранить');
       });
   };
   /**
@@ -87,14 +87,14 @@ const App = () => {
    * new card adding
    */
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  const [addCardSubmitButtonState, setAddCardSubmitButtonState] = useState('Сохранить');
+  const [addCardSubmitButtonText, setAddCardSubmitButtonText] = useState('Сохранить');
 
   const openAddPlaceModal = () => {
     setIsAddPlacePopupOpen(true);
   };
 
   const handleAddPlace = (data) => {
-    setAddCardSubmitButtonState('Сохранение...');
+    setAddCardSubmitButtonText('Сохранение...');
     api
       .createCard({
         name: data.name,
@@ -106,7 +106,7 @@ const App = () => {
       })
       .catch((err) => console.error(err))
       .finally(() => {
-        setAddCardSubmitButtonState('Сохранить');
+        setAddCardSubmitButtonText('Сохранить');
       });
   };
 
@@ -237,6 +237,20 @@ const App = () => {
     tokenCheck();
   }, []);
 
+  const handleModalCloseByEsc = (evt) => {
+    if (evt.key === 'Escape') {
+      closeAllPopups();
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleModalCloseByEsc);
+
+    return () => {
+      document.removeEventListener('keydown', handleModalCloseByEsc);
+    }
+  }, []);
+
   const renderCards = (jwt) => api.getCards(jwt).then((cards) => setCards(cards.reverse()));
 
   return (
@@ -284,14 +298,14 @@ const App = () => {
         onClose={closeAllPopups}
         currentUser={currentUser}
         onUpdateUser={handleUpdateUser}
-        submitButtonState={editSubmitButtonState}
+        submitButtonText={editSubmitButtonText}
       />
       <AddPlacePopup
         isOpen={isAddPlacePopupOpen}
         onClose={closeAllPopups}
         currentUser={currentUser}
         onAddPlace={handleAddPlace}
-        submitButtonState={addCardSubmitButtonState}
+        submitButtonText={addCardSubmitButtonText}
       />
 
       <EditAvatarPopup

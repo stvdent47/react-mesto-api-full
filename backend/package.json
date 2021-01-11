@@ -40,5 +40,8 @@
     "mongoose": "^5.10.14",
     "validator": "^13.5.2",
     "winston": "^3.3.3"
+  },
+  "prettier": {
+    "singleQuote": true
   }
 }
