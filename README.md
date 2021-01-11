@@ -17,5 +17,8 @@
 
 `CORS_ORIGIN` — for accepting fetches from specific domains
 
+### .env on frontend must contain:
+`BASE_URL` ( = "http://localhost:3000" ) — url for requests to backend
+
 Ссылка на сайт:
 https://stvdent47.students.nomoredomains.icu/
