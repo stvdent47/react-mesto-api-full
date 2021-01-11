@@ -1,27 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PopupWithForm from './PopupWithForm.jsx';
+import { useForm } from '../hooks/useForm.js';
 
 const AddPlacePopup = (props) => {
-  const [placeName, setPlaceName] = useState('');
-  const [placeLink, setPlaceLink] = useState('');
+  const { values, setValues, handleInputChange } = useForm();
 
   const handleAddPlaceSubmit = (e) => {
     e.preventDefault();
 
     props.onAddPlace({
-      name: placeName,
-      link: placeLink,
+      name: values.place,
+      link: values.link,
     });
 
-    setPlaceName('');
-    setPlaceLink('');
-  };
-
-  const handlePlaceNameInput = (e) => {
-    setPlaceName(e.target.value);
-  };
-  const handlePlaceLinkInput = (e) => {
-    setPlaceLink(e.target.value);
+    setValues({});
   };
 
   return (
@@ -36,7 +28,7 @@ const AddPlacePopup = (props) => {
         <>
           <input
             type='text'
-            name='place-name'
+            name='place'
             id='place-name-input'
             placeholder='Название'
             className='modal__input'
@@ -44,20 +36,20 @@ const AddPlacePopup = (props) => {
             minLength='1'
             maxLength='30'
             autoComplete='off'
-            value={placeName}
-            onChange={handlePlaceNameInput}
+            value={values.place || ''}
+            onChange={handleInputChange}
           />
           <p className='modal__input-error-message' id='place-name-error'></p>
 
           <input
             type='url'
-            name='place-link'
+            name='link'
             id='place-link-input'
             placeholder='Ссылка на картинку'
             className='modal__input'
             required
-            value={placeLink}
-            onChange={handlePlaceLinkInput}
+            value={values.link || ''}
+            onChange={handleInputChange}
           />
           <p className='modal__input-error-message' id='place-link-error'></p>
         </>
