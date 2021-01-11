@@ -237,6 +237,20 @@ const App = () => {
     tokenCheck();
   }, []);
 
+  const handleModalCloseByEsc = (evt) => {
+    if (evt.key === 'Escape') {
+      closeAllPopups();
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleModalCloseByEsc);
+
+    return () => {
+      document.removeEventListener('keydown', handleModalCloseByEsc);
+    }
+  }, []);
+
   const renderCards = (jwt) => api.getCards(jwt).then((cards) => setCards(cards.reverse()));
 
   return (
