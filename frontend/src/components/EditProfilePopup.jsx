@@ -1,11 +1,12 @@
 import React, { useEffect, useContext } from 'react';
 import PopupWithForm from './PopupWithForm.jsx';
-import { useForm } from '../hooks/useForm.js';
+import useFormWithValidation from '../hooks/useFormWithValidation.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
 const EditProfilePopup = (props) => {
   const currentUser = useContext(CurrentUserContext);
-  const { values, setValues, handleInputChange } = useForm();
+  // const { values, setValues, handleInputChange } = useForm();
+  const { values, setValues, handleInputChange, errors, isFormValid, resetForm } = useFormWithValidation();
   
   const handleEditSubmit = (e) => {
     e.preventDefault();
@@ -21,16 +22,17 @@ const EditProfilePopup = (props) => {
       name: currentUser.name,
       about: currentUser.about,
     });
-  }, [currentUser, props.isOpen]);
+  }, [currentUser, props.isOpen, resetForm]);
   
   return (
     <PopupWithForm
       name='edit-modal'
       title='Редактировать профиль'
-      submitButtonState={props.submitButtonState}
+      submitButtonText={props.submitButtonText}
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSubmit={handleEditSubmit}
+      isSubmitDisabled={!isFormValid}
       children={
         <>
           <input
@@ -46,7 +48,7 @@ const EditProfilePopup = (props) => {
             value={values.name || ''}
             onChange={handleInputChange}
           />
-          <p className='modal__input-error-message' id='profile-name-error'></p>
+          <p className={`modal__input-error-message ${errors.name && 'modal__input-error-message_visible'}`} id='profile-name-error'>{errors.name || ''}</p>
           <input
             type='text'
             name='about'
@@ -60,7 +62,7 @@ const EditProfilePopup = (props) => {
             value={values.about || ''}
             onChange={handleInputChange}
           />
-          <p className='modal__input-error-message' id='profile-job-error'></p>
+          <p className={`modal__input-error-message ${errors.about && 'modal__input-error-message_visible'}`} id='profile-job-error'>{errors.about || ''}</p>
         </>
       }
     />

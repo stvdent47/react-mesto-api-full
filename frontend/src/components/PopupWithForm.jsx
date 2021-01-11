@@ -14,8 +14,8 @@ const PopupWithForm = (props) => {
           onSubmit={props.onSubmit}
         >
           {props.children}
-          <button type='submit' className='modal__button'>
-            {props.submitButtonState}
+          <button type='submit' className={`modal__button ${props.isSubmitDisabled && 'modal__button_disabled'}`} disabled={props.isSubmitDisabled}>
+            {props.submitButtonText}
           </button>
         </form>
 

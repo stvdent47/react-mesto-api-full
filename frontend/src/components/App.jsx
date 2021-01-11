@@ -29,14 +29,14 @@ const App = () => {
    * profile editing
    */
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
-  const [editSubmitButtonState, seteditSubmitButtonState] = useState('Сохранить');
+  const [editSubmitButtonText, seteditSubmitButtonText] = useState('Сохранить');
 
   const openEditProfileModal = () => {
     setIsEditProfilePopupOpen(true);
   };
 
   const handleUpdateUser = (data) => {
-    seteditSubmitButtonState('Сохранение...');
+    seteditSubmitButtonText('Сохранение...');
     api
       .updateUser(data)
       .then((res) => {
@@ -50,7 +50,7 @@ const App = () => {
       })
       .catch((err) => console.error(err))
       .finally(() => {
-        seteditSubmitButtonState('Сохранить');
+        seteditSubmitButtonText('Сохранить');
       });
   };
   /**
@@ -298,7 +298,7 @@ const App = () => {
         onClose={closeAllPopups}
         currentUser={currentUser}
         onUpdateUser={handleUpdateUser}
-        submitButtonState={editSubmitButtonState}
+        submitButtonText={editSubmitButtonText}
       />
       <AddPlacePopup
         isOpen={isAddPlacePopupOpen}
