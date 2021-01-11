@@ -87,14 +87,14 @@ const App = () => {
    * new card adding
    */
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  const [addCardSubmitButtonState, setAddCardSubmitButtonState] = useState('Сохранить');
+  const [addCardSubmitButtonText, setAddCardSubmitButtonText] = useState('Сохранить');
 
   const openAddPlaceModal = () => {
     setIsAddPlacePopupOpen(true);
   };
 
   const handleAddPlace = (data) => {
-    setAddCardSubmitButtonState('Сохранение...');
+    setAddCardSubmitButtonText('Сохранение...');
     api
       .createCard({
         name: data.name,
@@ -106,7 +106,7 @@ const App = () => {
       })
       .catch((err) => console.error(err))
       .finally(() => {
-        setAddCardSubmitButtonState('Сохранить');
+        setAddCardSubmitButtonText('Сохранить');
       });
   };
 
@@ -305,7 +305,7 @@ const App = () => {
         onClose={closeAllPopups}
         currentUser={currentUser}
         onAddPlace={handleAddPlace}
-        submitButtonState={addCardSubmitButtonState}
+        submitButtonText={addCardSubmitButtonText}
       />
 
       <EditAvatarPopup

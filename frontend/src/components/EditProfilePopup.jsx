@@ -18,6 +18,10 @@ const EditProfilePopup = (props) => {
   };
   
   useEffect(() => {
+    if (currentUser) {
+      resetForm(currentUser);
+    }
+    
     setValues({
       name: currentUser.name,
       about: currentUser.about,

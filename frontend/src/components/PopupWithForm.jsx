@@ -1,21 +1,31 @@
 import React from 'react';
 
-const PopupWithForm = (props) => {
+const PopupWithForm = ({
+  name,
+  title,
+  submitButtonText,
+  isOpen,
+  onClose,
+  onSubmit,
+  isSubmitDisabled = false,
+  children,
+}) => {
   return (
-    <div className={`modal ${props.name} ${props.isOpen ? 'modal_opened' : ''}`}>
+    <div className={`modal ${name} ${isOpen ? 'modal_opened' : ''}`}>
       <div className='modal__container'>
-        <h2 className='modal__title'>{props.title}</h2>
+        <h2 className='modal__title'>{title}</h2>
 
         <form
           action='#'
-          name={`form-${props.name}`}
+          name={`form-${name}`}
           className='modal__form'
           method='POST'
-          onSubmit={props.onSubmit}
+          onSubmit={onSubmit}
+          noValidate
         >
-          {props.children}
-          <button type='submit' className={`modal__button ${props.isSubmitDisabled && 'modal__button_disabled'}`} disabled={props.isSubmitDisabled}>
-            {props.submitButtonText}
+          {children}
+          <button type='submit' className={`modal__button ${isSubmitDisabled && 'modal__button_disabled'}`} disabled={isSubmitDisabled}>
+            {submitButtonText}
           </button>
         </form>
 
@@ -23,7 +33,7 @@ const PopupWithForm = (props) => {
           className='modal__close-button'
           type='button'
           aria-label='Закрыть'
-          onClick={props.onClose}
+          onClick={onClose}
         ></button>
       </div>
     </div>
